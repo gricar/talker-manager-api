@@ -60,11 +60,28 @@ app.post('/talker', async (req, res) => {
   try {
     const { body: newTalker } = req;
     const oldTalkers = await getTalkers();
-    
+
     const newArr = [...oldTalkers, newTalker];
 
     await setTalker(newArr);
     res.status(201).json({ newTalker });
+  } catch (err) {
+    res.status(500).end();
+  }
+});
+
+app.put('/talker/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name, age, talk } = req.body;
+    const talkers = await getTalkers();
+
+    const talkerIndex = talkers.findIndex((r) => r.id === Number(id));
+    // if (talkerIndex === -1) return res.status(404).json({ message: 'Id não encotrado :/' });
+
+    talkers[talkerIndex] = { ...talkers[talkerIndex], name, age, talk };
+
+    return res.status(200).json(talkers[talkerIndex]);
   } catch (err) {
     res.status(500).end();
   }
