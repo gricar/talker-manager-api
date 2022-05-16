@@ -112,6 +112,8 @@ app.put('/talker/:id', async (req, res) => {
     // if (talkerIndex === -1) return res.status(404).json({ message: 'Id não encotrado :/' });
 
     talkers[talkerIndex] = { ...talkers[talkerIndex], name, age, talk };
+    
+    await setTalker([...talkers, talkers[talkerIndex]]);
 
     return res.status(200).json(talkers[talkerIndex]);
   } catch (err) {
