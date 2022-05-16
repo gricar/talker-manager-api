@@ -8,6 +8,7 @@ const validatePassword = require('./middlewares/validatePassword');
 const authentication = require('./middlewares/authentication');
 const validateName = require('./middlewares/validateName');
 const validateAge = require('./middlewares/validateAge');
+const validateTalk = require('./middlewares/validateTalk');
 const validateDate = require('./middlewares/validateDate');
 const validateRate = require('./middlewares/validateRate');
 
@@ -53,10 +54,11 @@ app.post('/login', validateEmail, validatePassword, (_req, res) => {
   return res.status(200).json({ token });
 });
 
-app.use([authentication, validateName, validateAge, validateDate, validateRate]);
+app.use([authentication, validateName, validateAge, validateTalk, validateDate, validateRate]);
 
 app.post('/talker', (req, res) => {
   const { body } = req;
+
   res.status(201).json({ body });
 });
 
