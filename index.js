@@ -2,7 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const crypto = require('crypto');
 
-const { getTalkers } = require('./utils/fs-utils');
+const { getTalkers, setTalker } = require('./utils/fs-utils');
 const validateEmail = require('./middlewares/validateEmail');
 const validatePassword = require('./middlewares/validatePassword');
 const authentication = require('./middlewares/authentication');
@@ -56,10 +56,18 @@ app.post('/login', validateEmail, validatePassword, (_req, res) => {
 
 app.use([authentication, validateName, validateAge, validateTalk, validateDate, validateRate]);
 
-app.post('/talker', (req, res) => {
-  const { body } = req;
+app.post('/talker', async (req, res) => {
+  try {
+    const { body: newTalker } = req;
+    const oldTalkers = await getTalkers();
+    
+    const newArr = [...oldTalkers, newTalker];
 
-  res.status(201).json({ body });
+    await setTalker(newArr);
+    res.status(201).json({ newTalker });
+  } catch (err) {
+    res.status(500).end();
+  }
 });
 
 app.all('*', (req, res) => res.status(404).json({ message: `Rota '${req.path}' não existe!` }));
