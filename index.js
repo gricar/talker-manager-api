@@ -89,7 +89,7 @@ app.post('/talker', async (req, res) => {
     const oldTalkers = await getTalkers();
 
     const newTalker = {
-      id: oldTalkers.length + 1,
+      id: Math.max(...oldTalkers.map((talker) => talker.id)) + 1, 
       name,
       age,
       talk,
