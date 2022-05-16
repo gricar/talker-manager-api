@@ -23,13 +23,26 @@ app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send(); 
 });
 
-app.get('/talker', async (request, response) => {
+app.get('/talker/search', authentication, async (req, res) => {
+  try {
+    const { name } = req.query;
+
+    const talkers = await getTalkers();
+    const filteredTalkers = talkers.filter((person) => person.name.includes(name));
+    
+    return res.status(200).json(filteredTalkers);
+  } catch (err) {
+    res.status(500).end();
+  }
+});
+
+app.get('/talker', async (req, res) => {
   try {
     const talkers = await getTalkers();
-    return response.status(200).json(talkers);
+    return res.status(200).json(talkers);
   } catch (err) {
     console.error(`Não foi possível ler o arquivo. \n Erro: ${err}`);
-    response.status(500).end();
+    res.status(500).end();
   }
 });
 
