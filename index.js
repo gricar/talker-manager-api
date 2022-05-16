@@ -85,13 +85,18 @@ app.use([authentication, validateName, validateAge, validateTalk, validateDate, 
 
 app.post('/talker', async (req, res) => {
   try {
-    const { body: newTalker } = req;
+    const { name, age, talk } = req.body;
     const oldTalkers = await getTalkers();
 
-    const newArr = [...oldTalkers, newTalker];
+    const newTalker = {
+      id: oldTalkers.length + 1,
+      name,
+      age,
+      talk,
+    };
 
-    await setTalker(newArr);
-    res.status(201).json({ newTalker });
+    await setTalker([...oldTalkers, newTalker]);
+    return res.status(201).json(newTalker);
   } catch (err) {
     res.status(500).end();
   }
