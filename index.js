@@ -54,6 +54,20 @@ app.post('/login', validateEmail, validatePassword, (_req, res) => {
   return res.status(200).json({ token });
 });
 
+app.delete('/talker/:id', authentication, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const talkers = await getTalkers();
+
+    const talkersFiltered = talkers.filter((people) => people.id !== Number(id));
+
+    await setTalker(talkersFiltered);
+    res.status(204).end();
+  } catch (err) {
+    res.status(500).end();
+  }
+});
+
 app.use([authentication, validateName, validateAge, validateTalk, validateDate, validateRate]);
 
 app.post('/talker', async (req, res) => {
