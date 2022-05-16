@@ -39,6 +39,8 @@ app.get('/talker/:id', async (req, res) => {
   }
 });
 
+app.all('*', (req, res) => res.status(404).json({ message: `Rota '${req.path}' não existe!` }));
+
 app.listen(PORT, () => {
   console.log('Online');
 });
