@@ -5,6 +5,8 @@ const crypto = require('crypto');
 const { getTalkers } = require('./utils/fs-utils');
 const validateEmail = require('./middlewares/validateEmail');
 const validatePassword = require('./middlewares/validatePassword');
+const authentication = require('./middlewares/authentication');
+const validateName = require('./middlewares/validateName');
 
 const app = express();
 app.use(bodyParser.json());
@@ -46,6 +48,13 @@ app.post('/login', validateEmail, validatePassword, (_req, res) => {
   const token = crypto.randomBytes(8).toString('hex');
 
   return res.status(200).json({ token });
+});
+
+app.use([authentication, validateName]);
+
+app.post('/talker', (req, res) => {
+  const { body } = req;
+  res.status(201).json({ body });
 });
 
 app.all('*', (req, res) => res.status(404).json({ message: `Rota '${req.path}' não existe!` }));
