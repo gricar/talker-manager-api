@@ -25,7 +25,7 @@ app.get('/', (_request, response) => {
 
 app.get('/talker/search', authentication, async (req, res) => {
   try {
-    const { name } = req.query;
+    const { q: name } = req.query;
 
     const talkers = await getTalkers();
     const filteredTalkers = talkers.filter((person) => person.name.includes(name));
