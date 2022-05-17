@@ -1,6 +1,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 
+const error = require('./middlewares/error');
+
 const app = express();
 app.use(bodyParser.json());
 
@@ -18,6 +20,8 @@ app.use('/talker', talkerRouter);
 app.use('/login', loginRouter);
 
 app.all('*', (req, res) => res.status(404).json({ message: `Rota '${req.path}' não existe!` }));
+
+app.use(error);
 
 app.listen(PORT, () => {
   console.log('Online');
